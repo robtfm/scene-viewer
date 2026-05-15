@@ -22,6 +22,10 @@ const state = {
   pitch: 0
 }
 
+export function getFlyCameraEntity(): Entity {
+  return state.cameraEntity
+}
+
 export function installFlyCamera({
   position,
   lookAt

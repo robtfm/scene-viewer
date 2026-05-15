@@ -16,6 +16,7 @@ import { Color4, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene, onLeaveScene } from '@dcl/sdk/players'
 import ReactEcs, { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
 import { TagElement } from './components/tag-element'
+import { getFlyCameraEntity } from './fly-camera'
 
 const MAX_DISTANCE = 32
 const MAX_DISTANCE_SQ = MAX_DISTANCE * MAX_DISTANCE
@@ -67,16 +68,21 @@ function cullSystem(dt: number): void {
   if (cullTimer < CULL_INTERVAL) return
   cullTimer = 0
 
-  const cam = Transform.getOrNull(engine.CameraEntity)
+  const camEnt = getFlyCameraEntity()
+  if (!camEnt) return
+  const cam = Transform.getOrNull(camEnt)
   if (cam === null) return
   const camFwd = Vector3.rotate(Vector3.Forward(), cam.rotation)
 
-  for (const tagEntity of tags.values()) {
-    const tagPos = Transform.getOrNull(tagEntity)?.position
+  for (const [userId, tagEntity] of tags) {
+    const avatarPos = getPlayer({ userId })?.position
     let visible = false
-    if (tagPos) {
-      const d = Vector3.subtract(tagPos, cam.position)
-      if (Vector3.lengthSquared(d) < MAX_DISTANCE_SQ && Vector3.dot(d, camFwd) > 0) {
+    if (avatarPos) {
+      const d = Vector3.subtract(avatarPos, cam.position)
+      if (
+        Vector3.lengthSquared(d) < MAX_DISTANCE_SQ &&
+        Vector3.dot(d, camFwd) > 0
+      ) {
         visible = true
       }
     }
