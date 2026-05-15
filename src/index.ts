@@ -3,6 +3,7 @@ import { getPlayer } from '@dcl/sdk/players'
 import { Vector3 } from '@dcl/sdk/math'
 import { BevyApi } from './bevy-api'
 import { installFlyCamera } from './fly-camera'
+import { installAvatarTags } from './avatar-tags'
 import { applyExplorerSettings } from './explorer-settings'
 import { hideOwnAvatar } from './hide-avatars'
 import { installUi } from './ui'
@@ -33,6 +34,7 @@ export function main(): void {
         ? Vector3.add(playerPos, Vector3.create(0, 1.6, 0))
         : Vector3.create(8, 2, 8)
       installFlyCamera(start)
+      installAvatarTags()
       installUi()
 
       // TODO #6: render Audio + Graphics settings panel
