@@ -31,6 +31,9 @@ export function Dropdown({
   const [hovered, setHovered] = ReactEcs.useState<number | null>(null)
   const selectedIndex = options.findIndex((o) => o.value === value)
   const rowHeight = fontSize * 2.1
+  const parentZ =
+    typeof uiTransform?.zIndex === 'number' ? uiTransform.zIndex : 0
+  const listZ = parentZ + 2
 
   return (
     <UiEntity
@@ -87,7 +90,7 @@ export function Dropdown({
             maxHeight: listMaxHeight,
             positionType: 'absolute',
             position: { left: 0, top: 2.5 * fontSize },
-            zIndex: 2,
+            zIndex: listZ,
             borderRadius: 6
           }}
           uiBackground={{ color: ALMOST_WHITE }}

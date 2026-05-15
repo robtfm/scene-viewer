@@ -56,9 +56,11 @@ function intValueLabel(setting: ExplorerSetting): string {
 }
 
 function SettingRow({
-  setting
+  setting,
+  zIndex
 }: {
   setting: ExplorerSetting
+  zIndex: number
   key?: Key
 }): ReactEcs.JSX.Element {
   const isEnum = setting.namedVariants && setting.namedVariants.length > 0
@@ -69,7 +71,8 @@ function SettingRow({
         flexDirection: 'row',
         alignItems: 'center',
         height: 36,
-        margin: { bottom: 8 }
+        margin: { bottom: 8 },
+        zIndex
       }}
     >
       <Label
@@ -81,7 +84,7 @@ function SettingRow({
       />
 
       {isEnum ? (
-        <UiEntity uiTransform={{ width: '55%', height: '100%' }}>
+        <UiEntity uiTransform={{ width: '55%', height: '100%', zIndex }}>
           <Dropdown
             options={setting.namedVariants.map((v) => ({
               label: v.name,
@@ -92,7 +95,7 @@ function SettingRow({
               setting.namedVariants[0].name
             }
             fontSize={13}
-            uiTransform={{ width: '100%', height: '100%' }}
+            uiTransform={{ width: '100%', height: '100%', zIndex }}
             onChange={(name) => {
               const idx = setting.namedVariants.findIndex(
                 (v) => v.name === name
@@ -265,7 +268,13 @@ export function SettingsPanel(): ReactEcs.JSX.Element | null {
             />
           )}
           {state.loaded &&
-            filtered.map((s) => <SettingRow key={s.name} setting={s} />)}
+            filtered.map((s, index) => (
+              <SettingRow
+                key={s.name}
+                setting={s}
+                zIndex={filtered.length - index}
+              />
+            ))}
         </UiEntity>
       </UiEntity>
     </UiEntity>
