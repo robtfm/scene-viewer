@@ -1,19 +1,21 @@
 import { type UiBackgroundProps } from '@dcl/react-ecs'
 import iconsJson from '../assets/images/atlas/icons.json'
+import { navbarJson } from './atlas-navbar'
 
 type Frame = { x: number; y: number; w: number; h: number }
-type Sprite = { frame: Frame }
-type AtlasData = {
+type Sprite = { frame: Frame; [k: string]: unknown }
+export type AtlasData = {
   frames: Record<string, Sprite>
-  meta: { size: { w: number; h: number } }
+  meta: { size: { w: number; h: number }; [k: string]: unknown }
 }
 
-export type AtlasName = 'icons'
+export type AtlasName = 'icons' | 'navbar'
 
 export type AtlasIcon = { atlasName: AtlasName; spriteName: string }
 
 const atlases: Record<AtlasName, AtlasData> = {
-  icons: iconsJson as AtlasData
+  icons: iconsJson as AtlasData,
+  navbar: navbarJson as AtlasData
 }
 
 function getUvs(icon: AtlasIcon): number[] {

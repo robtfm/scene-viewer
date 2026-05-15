@@ -7,6 +7,10 @@ const PRESET: Record<string, number> = {
   Fog: 0
 }
 
+export const FORCED_SETTING_NAMES: ReadonlySet<string> = new Set(
+  Object.keys(PRESET)
+)
+
 export async function applyExplorerSettings(): Promise<void> {
   const settings = await BevyApi.getSettings()
   const byName = new Map(settings.map((s) => [s.name, s]))
