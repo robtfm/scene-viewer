@@ -17,6 +17,17 @@ export type ChatMessageDefinition = {
   timestamp: number
 }
 
+export type LiveSceneInfo = {
+  hash: string
+  title: string
+  parcels: Array<{ x: number; y: number }>
+  isPortable: boolean
+  isBroken: boolean
+  isBlocked: boolean
+  isSuper: boolean
+  sdkVersion: string
+}
+
 export type BevyApiInterface = {
   loginGuest: () => void
   logout: () => void
@@ -25,6 +36,7 @@ export type BevyApiInterface = {
   getChatStream: () => Promise<ChatMessageDefinition[]>
   sendChat: (message: string, channel?: string) => void
   getParams: () => Promise<Record<string, string>>
+  liveSceneInfo: () => Promise<LiveSceneInfo[]>
 }
 
 let bevyApiFound = false

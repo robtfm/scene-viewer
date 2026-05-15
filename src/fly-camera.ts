@@ -22,11 +22,25 @@ const state = {
   pitch: 0
 }
 
-export function installFlyCamera(startPosition: Vector3): void {
+export function installFlyCamera({
+  position,
+  lookAt
+}: {
+  position: Vector3
+  lookAt?: Vector3
+}): void {
   const cam = engine.addEntity()
   state.cameraEntity = cam
 
-  Transform.create(cam, { position: startPosition })
+  Transform.create(cam, { position })
+
+  if (lookAt) {
+    const d = Vector3.subtract(lookAt, position)
+    const horiz = Math.sqrt(d.x * d.x + d.z * d.z)
+    state.yaw = Math.atan2(d.x, d.z)
+    state.pitch = Math.atan2(-d.y, horiz)
+  }
+
   VirtualCamera.create(cam, {})
   MainCamera.createOrReplace(engine.CameraEntity, {
     virtualCameraEntity: cam

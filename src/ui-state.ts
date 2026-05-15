@@ -1,5 +1,5 @@
 const state = {
-  chatOpen: true,
+  chatOpen: false,
   settingsOpen: false
 }
 

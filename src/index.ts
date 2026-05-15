@@ -1,9 +1,11 @@
 import { engine, executeTask, Transform } from '@dcl/sdk/ecs'
 import { getPlayer } from '@dcl/sdk/players'
 import { Vector3 } from '@dcl/sdk/math'
+import { movePlayerTo } from '~system/RestrictedActions'
 import { BevyApi } from './bevy-api'
 import { installFlyCamera } from './fly-camera'
 import { installAvatarTags } from './avatar-tags'
+import { startCurrentSceneTracker } from './current-scene'
 import { applyExplorerSettings } from './explorer-settings'
 import { hideOwnAvatar } from './hide-avatars'
 import { installUi } from './ui'
@@ -29,11 +31,21 @@ export function main(): void {
         console.error('applyExplorerSettings failed', e)
       })
 
-      const playerPos = Transform.getOrNull(engine.PlayerEntity)?.position
-      const start = playerPos
-        ? Vector3.add(playerPos, Vector3.create(0, 1.6, 0))
-        : Vector3.create(8, 2, 8)
-      installFlyCamera(start)
+      const originalPos =
+        Transform.getOrNull(engine.PlayerEntity)?.position ?? Vector3.Zero()
+      // Don't go too high — bevy-explorer's get_ray uses a fixed 0.01
+      // f32 nudge that's lost to precision past ~40k, causing an
+      // infinite loop in scene raycasts against the player position.
+      movePlayerTo({
+        newRelativePosition: Vector3.create(originalPos.x, 10_000, originalPos.z)
+      }).catch((e) => {
+        console.error('movePlayerTo failed', e)
+      })
+      installFlyCamera({
+        position: Vector3.add(originalPos, Vector3.create(8, 4, 6)),
+        lookAt: Vector3.add(originalPos, Vector3.create(0, 1, 0))
+      })
+      startCurrentSceneTracker(originalPos)
       installAvatarTags()
       installUi()
 

@@ -1,5 +1,6 @@
 import ReactEcs, { ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { ChatOverlay, startChatStream } from './chat-overlay'
+import { SceneInfoPanel } from './components/scene-info-panel'
 import { SettingsPanel } from './components/settings-panel'
 import { Sidebar } from './components/sidebar'
 import { getChatOpen, getSettingsOpen, subscribeUiState } from './ui-state'
@@ -22,6 +23,7 @@ function Root(): ReactEcs.JSX.Element {
       }}
     >
       <Sidebar />
+      <SceneInfoPanel />
       {getChatOpen() && <ChatOverlay />}
       {getSettingsOpen() && <SettingsPanel />}
     </UiEntity>
