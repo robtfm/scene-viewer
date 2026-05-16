@@ -106,6 +106,8 @@ function flyCameraSystem(dt: number): void {
   }
 
   const transform = Transform.getMutable(cam)
-  transform.position = Vector3.add(transform.position, move)
+  const nextPos = Vector3.add(transform.position, move)
+  if (nextPos.y < 0.25) nextPos.y = 0.25
+  transform.position = nextPos
   transform.rotation = rotation
 }
